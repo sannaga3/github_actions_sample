@@ -1,0 +1,25 @@
+name: Test
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Start Docker services
+        run: docker-compose up -d
+      - name: Docker Compose Process
+        run: docker-compose ps -a
+      - name: composer install
+        run: docker-compose exec -T php bash -c "composer install"
+      - name: Composer Version
+        run: docker-compose exec -T app composer --version
+      - name: Run PHPUnit
+        run: docker-compose exec -T php bash -c "php vendor/bin/phpunit"
