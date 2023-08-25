@@ -21,5 +21,11 @@ jobs:
         run: docker-compose exec -T app bash -c "cd ci_sample && composer install"
       - name: Composer Version
         run: docker-compose exec -T app bash -c "composer --version"
+      - name: Laravel setting
+        run: |
+          docker-compose exec -T app bash -c "cd ci_sample && cp .env.example .env"
+          docker-compose exec -T app bash -c "cd ci_sample && php artisan key:generate"
+      - name: Migrate
+        run: docker-compose exec -T app bash -c "cd ci_sample && php artisan migrate"
       - name: Run PHPUnit
         run: docker-compose exec -T app bash -c "cd ci_sample && php vendor/bin/phpunit"
